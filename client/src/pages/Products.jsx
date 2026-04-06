@@ -9,6 +9,11 @@ import Container from '../components/ui/Container';
 import Input from '../components/ui/Input';
 import OptimizedImage from '../components/ui/OptimizedImage';
 
+const PRICE_TIERS = {
+  budget: { label: 'Budget Picks', min: '0', max: '5000' },
+  premium: { label: 'Premium Picks', min: '25000', max: '' },
+};
+
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
@@ -28,6 +33,7 @@ const Products = () => {
     category: searchParams.get('category') || '',
     minPrice: searchParams.get('minPrice') || '',
     maxPrice: searchParams.get('maxPrice') || '',
+    priceTier: searchParams.get('priceTier') || '',
     page: parseInt(searchParams.get('page'), 10) || 1,
   });
 
@@ -80,6 +86,22 @@ const Products = () => {
 
   const updateFilter = (key, value) => {
     const next = { ...filters, [key]: value, page: 1 };
+
+    if (key === 'priceTier') {
+      const selectedTier = PRICE_TIERS[value];
+      if (selectedTier) {
+        next.minPrice = selectedTier.min;
+        next.maxPrice = selectedTier.max;
+      } else {
+        next.minPrice = '';
+        next.maxPrice = '';
+      }
+    }
+
+    if ((key === 'minPrice' || key === 'maxPrice') && filters.priceTier) {
+      next.priceTier = '';
+    }
+
     setFilters(next);
     updateParams(next);
   };
@@ -92,7 +114,7 @@ const Products = () => {
   };
 
   const clearFilters = () => {
-    const reset = { search: '', category: '', minPrice: '', maxPrice: '', page: 1 };
+    const reset = { search: '', category: '', minPrice: '', maxPrice: '', priceTier: '', page: 1 };
     setFilters(reset);
     setSearchParams({});
   };
@@ -129,6 +151,35 @@ const Products = () => {
         </div>
 
         <div>
+          <label className="text-sm font-medium text-black mb-2 block">Price Tier</label>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => updateFilter('priceTier', 'budget')}
+              className={`rounded-lg px-3 py-2 text-xs font-semibold border transition ${filters.priceTier === 'budget' ? 'bg-primary-red text-white border-primary-red' : 'bg-white border-black/10 text-black hover:border-primary-red/40'}`}
+            >
+              Budget (<span aria-hidden>₹</span>5,000)
+            </button>
+            <button
+              type="button"
+              onClick={() => updateFilter('priceTier', 'premium')}
+              className={`rounded-lg px-3 py-2 text-xs font-semibold border transition ${filters.priceTier === 'premium' ? 'bg-primary-red text-white border-primary-red' : 'bg-white border-black/10 text-black hover:border-primary-red/40'}`}
+            >
+              Premium (25,000+)
+            </button>
+          </div>
+          {filters.priceTier ? (
+            <button
+              type="button"
+              onClick={() => updateFilter('priceTier', '')}
+              className="mt-2 text-xs font-semibold text-primary-red"
+            >
+              Remove price tier
+            </button>
+          ) : null}
+        </div>
+
+        <div>
           <label className="text-sm font-medium text-black mb-2 block">Price Range</label>
           <div className="grid grid-cols-2 gap-3">
             <Input
@@ -144,6 +195,7 @@ const Products = () => {
               placeholder="Max"
             />
           </div>
+          <p className="text-xs text-gray-500 mt-2">Tip: Search for "budget" or "premium" to match curated descriptions.</p>
         </div>
       </div>
     </div>

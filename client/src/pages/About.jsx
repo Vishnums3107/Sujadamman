@@ -31,7 +31,7 @@ const About = () => {
       <section className="py-16 md:py-20 bg-[#F8F8F8]">
         <Container>
           <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-heading font-black">About FurniHome</h1>
+            <h1 className="text-4xl md:text-5xl font-heading font-black">About Sujadamman and Subpy </h1>
             <div className="h-[2px] w-20 bg-primary-red mt-4" />
             <p className="text-gray-600 mt-5 text-lg">
               Built around disciplined design, reliable manufacturing, and long-lasting furniture solutions.
@@ -46,14 +46,14 @@ const About = () => {
             <div>
               <h2 className="text-3xl font-heading font-bold">Our Story</h2>
               <p className="text-gray-600 mt-4 leading-relaxed">
-                Since 2008, FurniHome has delivered furniture and home essentials that prioritize durability, practical comfort, and clean aesthetics.
+                Since 2008, Sujadamman and Subpy  has delivered furniture and home essentials that prioritize durability, practical comfort, and clean aesthetics.
                 We support residential and business clients through consistent quality, transparent operations, and reliable after-sales support.
               </p>
             </div>
             <div className="rounded-2xl overflow-hidden border border-black/10 shadow-md">
               <img
                 src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1100"
-                alt="FurniHome showroom"
+                alt="Sujadamman and Subpy  showroom"
                 className="w-full h-80 object-cover"
                 loading="lazy"
               />
@@ -79,7 +79,7 @@ const About = () => {
         <Container>
           <SectionTitle title="Timeline" subtitle="Key milestones in our growth." />
           <div className="max-w-3xl mx-auto mt-10 space-y-4">
-            {['2008 • Foundation', '2013 • Regional Expansion', '2018 • Manufacturing Scale Up', '2024 • Integrated Furniture & Essentials'].map((item, index) => (
+            {['2008 - Foundation', '2013 - Regional Expansion', '2018 - Manufacturing Scale Up', '2024 - Integrated Furniture & Essentials'].map((item, index) => (
               <motion.div
                 key={item}
                 initial={{ opacity: 0, x: -10 }}

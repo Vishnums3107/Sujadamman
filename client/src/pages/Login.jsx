@@ -99,7 +99,7 @@ const Login = () => {
                   onChange={handleChange}
                   required
                   className="input-field pl-10"
-                  placeholder="••••••••"
+                  placeholder="********"
                 />
               </div>
             </div>

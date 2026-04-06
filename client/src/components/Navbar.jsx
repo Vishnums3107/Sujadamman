@@ -40,7 +40,7 @@ const Navbar = () => {
               <FaShoppingBag className="text-white text-xl" />
             </div>
             <span className="font-heading font-bold text-2xl text-black tracking-wide">
-              FurniHome
+              Sujadamman and Subpy 
             </span>
           </Link>
 
@@ -100,14 +100,7 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
-            ) : (
-              <Link
-                to="/login"
-                className="btn-primary ripple"
-              >
-                Login
-              </Link>
-            )}
+            ) : null}
           </div>
 
           {/* Mobile Menu Button */}

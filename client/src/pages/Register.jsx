@@ -122,7 +122,7 @@ const Register = () => {
                   onChange={handleChange}
                   required
                   className="input-field pl-10"
-                  placeholder="••••••••"
+                  placeholder="********"
                 />
               </div>
               <p className="mt-1 text-xs text-gray-500">Must be at least 6 characters</p>
@@ -142,7 +142,7 @@ const Register = () => {
                   onChange={handleChange}
                   required
                   className="input-field pl-10"
-                  placeholder="••••••••"
+                  placeholder="********"
                 />
               </div>
             </div>

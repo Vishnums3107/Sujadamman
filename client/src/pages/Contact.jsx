@@ -5,6 +5,15 @@ import { FaChevronDown } from 'react-icons/fa';
 import { contactService } from '../services';
 import Container from '../components/ui/Container';
 
+const STORE_ADDRESS_QUERY =
+  'Subpy Wooden Furnitures, Nethimedu, Salem 636002';
+const MAP_EMBED_URL =
+  `https://www.google.com/maps?q=${encodeURIComponent(STORE_ADDRESS_QUERY)}&output=embed`;
+const MAP_FALLBACK_URL =
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(STORE_ADDRESS_QUERY)}`;
+const MAP_DIRECTIONS_URL =
+  `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(STORE_ADDRESS_QUERY)}&travelmode=driving`;
+
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [errors, setErrors] = useState({});
@@ -188,17 +197,40 @@ const Contact = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white border border-black/10 rounded-2xl overflow-hidden h-[320px] shadow-sm">
+            <div className="relative bg-white border border-black/10 rounded-2xl overflow-hidden h-[320px] shadow-sm">
+              <a
+                href={MAP_DIRECTIONS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute inset-0 z-10"
+                aria-label="Open directions to store venue in Google Maps"
+                title="Get directions to store"
+              />
               <iframe
-                src="https://maps.google.com/maps?q=Nethimedu%20Salem&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                src={MAP_EMBED_URL}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 loading="lazy"
                 title="Salem Location Map"
                 referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
               />
+              <div className="absolute right-3 bottom-3 z-20 pointer-events-none rounded-md bg-black/70 text-white text-xs px-2 py-1">
+                Click map for directions
+              </div>
             </div>
+            <p className="text-sm text-gray-600 -mt-2">
+              Map not loading?{' '}
+              <a
+                href={MAP_DIRECTIONS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-red font-semibold hover:underline"
+              >
+                Open directions in Google Maps
+              </a>
+            </p>
 
             <div className="bg-white border border-black/10 rounded-2xl p-6 shadow-sm">
               <h3 className="text-xl font-heading font-bold mb-4">FAQ</h3>
