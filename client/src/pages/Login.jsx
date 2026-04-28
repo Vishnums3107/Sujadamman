@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaLock, FaSignInAlt } from 'react-icons/fa';
+import { getAssetPath } from '../utils/assetPath';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -50,7 +51,7 @@ const Login = () => {
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center justify-center mb-4">
               <img
-                src="/logo/brand-logo.png"
+                src={getAssetPath('logo/brand-logo.png')}
                 alt="Sujadamman and Subpy logo"
                 className="h-14 w-auto object-contain"
               />

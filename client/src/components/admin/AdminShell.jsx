@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { getAssetPath } from '../../utils/assetPath';
 
 const navItems = [
   { label: 'Dashboard', path: '/admin' },
@@ -25,7 +26,7 @@ const AdminShell = ({ title, subtitle, children, actions }) => {
         <div className="w-full px-4 sm:px-6 lg:px-8 py-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <img
-              src="/logo/brand-logo.png"
+              src={getAssetPath('logo/brand-logo.png')}
               alt="Sujadamman and Subpy logo"
               className="h-12 w-auto object-contain"
             />

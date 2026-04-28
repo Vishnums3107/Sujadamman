@@ -1,3 +1,5 @@
+import { getAssetPath } from '../utils/assetPath';
+
 const sanitizeText = (value) =>
   `${value || ''}`
     .toLowerCase()
@@ -65,7 +67,12 @@ export const getProductNameFallbackImage = (productName, categoryName, variant =
 
 export const getProductImage = (product, index = 0) => {
   const imageUrl = product?.images?.[index];
-  if (imageUrl) return imageUrl;
+  if (imageUrl) {
+    if (typeof imageUrl === 'string' && imageUrl.startsWith('/')) {
+      return getAssetPath(imageUrl);
+    }
+    return imageUrl;
+  }
 
   const normalizedName = sanitizeText(product?.name);
   const override = PRODUCT_NAME_OVERRIDES[normalizedName];

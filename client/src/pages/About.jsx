@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Container from '../components/ui/Container';
 import SectionTitle from '../components/ui/SectionTitle';
+import { getAssetPath } from '../utils/assetPath';
 
 const About = () => {
   const stats = [
@@ -80,9 +81,9 @@ const About = () => {
           <SectionTitle title="Our Founders" subtitle="The visionaries behind Sujadamman and Subpy." />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
             {[
-              { name: 'S. Sekar', role: 'Founder & Managing Director', image: '/founders/sekar.png' },
-              { name: 'S. Balaji', role: 'Co-Founder & Director', image: '/founders/balaji.png' },
-              { name: 'S. Yuwanraj', role: 'Co-Founder & Director', image: '/founders/yuwanraj.png' },
+              { name: 'S. Sekar', role: 'Founder & Managing Director', image: getAssetPath('founders/sekar.png') },
+              { name: 'S. Balaji', role: 'Co-Founder & Director', image: getAssetPath('founders/balaji.png') },
+              { name: 'S. Yuwanraj', role: 'Co-Founder & Director', image: getAssetPath('founders/yuwanraj.png') },
             ].map((founder, index) => (
               <motion.div
                 key={founder.name}

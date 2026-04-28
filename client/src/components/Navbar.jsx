@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getAssetPath } from '../utils/assetPath';
 import { 
   FaBars, 
   FaTimes, 
@@ -36,7 +37,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <img
-              src="/logo/brand-logo.png"
+              src={getAssetPath('logo/brand-logo.png')}
               alt="Sujadamman and Subpy logo"
               className="h-12 w-auto object-contain"
             />

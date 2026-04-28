@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getAssetPath } from '../utils/assetPath';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -12,7 +13,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <img
-                src="/logo/brand-logo.png"
+                src={getAssetPath('logo/brand-logo.png')}
                 alt="Sujadamman and Subpy logo"
                 className="h-12 w-auto object-contain"
               />

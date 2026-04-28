@@ -1,3 +1,5 @@
+import { getAssetPath } from '../utils/assetPath';
+
 export const LOCAL_PRODUCTS = [
   {
     _id: 'local-ss-bottle-hammered-set',
@@ -7,7 +9,7 @@ export const LOCAL_PRODUCTS = [
     stock: 28,
     featured: true,
     category: { name: 'Home Essentials', type: 'Water Bottles' },
-    images: ['/products/hammered-steel-water-bottle-set.png'],
+    images: [getAssetPath('products/hammered-steel-water-bottle-set.png')],
     isLocalCatalog: true,
   },
   {
@@ -17,7 +19,7 @@ export const LOCAL_PRODUCTS = [
     price: 1199,
     stock: 34,
     category: { name: 'Home Essentials', type: 'Flasks' },
-    images: ['/products/pastel-vacuum-flask-set.png'],
+    images: [getAssetPath('products/pastel-vacuum-flask-set.png')],
     isLocalCatalog: true,
   },
   {
@@ -27,7 +29,7 @@ export const LOCAL_PRODUCTS = [
     price: 699,
     stock: 41,
     category: { name: 'Home Essentials', type: 'Lunch Box' },
-    images: ['/products/classic-lunch-box.png'],
+    images: [getAssetPath('products/classic-lunch-box.png')],
     isLocalCatalog: true,
   },
   {
@@ -37,7 +39,7 @@ export const LOCAL_PRODUCTS = [
     price: 499,
     stock: 50,
     category: { name: 'Home Essentials', type: 'Kids Bottles' },
-    images: ['/products/kids-mini-bottle-pair.png'],
+    images: [getAssetPath('products/kids-mini-bottle-pair.png')],
     isLocalCatalog: true,
   },
   {
@@ -47,7 +49,7 @@ export const LOCAL_PRODUCTS = [
     price: 399,
     stock: 46,
     category: { name: 'Home Essentials', type: 'Mugs' },
-    images: ['/products/designer-ceramic-mug-set.png'],
+    images: [getAssetPath('products/designer-ceramic-mug-set.png')],
     isLocalCatalog: true,
   },
   {
@@ -57,7 +59,7 @@ export const LOCAL_PRODUCTS = [
     price: 949,
     stock: 22,
     category: { name: 'Home Essentials', type: 'Casserole' },
-    images: ['/products/wooden-finish-casserole-small.png'],
+    images: [getAssetPath('products/wooden-finish-casserole-small.png')],
     isLocalCatalog: true,
   },
   {
@@ -68,7 +70,7 @@ export const LOCAL_PRODUCTS = [
     stock: 24,
     featured: true,
     category: { name: 'Home Essentials', type: 'Casserole' },
-    images: ['/products/marbella-casserole.png'],
+    images: [getAssetPath('products/marbella-casserole.png')],
     isLocalCatalog: true,
   },
   {
@@ -78,7 +80,7 @@ export const LOCAL_PRODUCTS = [
     price: 1399,
     stock: 20,
     category: { name: 'Home Essentials', type: 'Casserole' },
-    images: ['/products/morija-casserole.png'],
+    images: [getAssetPath('products/morija-casserole.png')],
     isLocalCatalog: true,
   },
   {
@@ -88,7 +90,7 @@ export const LOCAL_PRODUCTS = [
     price: 1549,
     stock: 18,
     category: { name: 'Home Essentials', type: 'Casserole' },
-    images: ['/products/latina-casserole.png'],
+    images: [getAssetPath('products/latina-casserole.png')],
     isLocalCatalog: true,
   },
   {
@@ -98,7 +100,7 @@ export const LOCAL_PRODUCTS = [
     price: 1099,
     stock: 26,
     category: { name: 'Home Essentials', type: 'Casserole' },
-    images: ['/products/wooden-finish-casserole-medium.png'],
+    images: [getAssetPath('products/wooden-finish-casserole-medium.png')],
     isLocalCatalog: true,
   },
 ];
