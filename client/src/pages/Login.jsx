@@ -60,18 +60,6 @@ const Login = () => {
             <p className="text-gray-600 dark:text-gray-400">Sign in to your account</p>
           </div>
 
-          {/* Demo Credentials */}
-          <div className="mb-6 p-4 bg-primary-50 rounded-lg border border-primary-200">
-            <p className="text-sm font-medium text-primary-700 mb-2">
-              Demo Admin Credentials:
-            </p>
-            <p className="text-sm text-primary-700">
-              Email: admin@furniture.com
-              <br />
-              Password: admin123
-            </p>
-          </div>
-
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
