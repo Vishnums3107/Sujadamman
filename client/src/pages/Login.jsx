@@ -29,7 +29,7 @@ const Login = () => {
     try {
       const response = await login(formData);
       toast.success('Login successful!');
-      const isAdmin = response?.data?.role === 'admin';
+      const isAdmin = (response?.data?.role || response?.role) === 'admin';
       navigate(isAdmin ? '/admin' : '/');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Invalid email or password');

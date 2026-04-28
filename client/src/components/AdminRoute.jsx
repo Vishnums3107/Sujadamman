@@ -9,7 +9,17 @@ const AdminRoute = ({ children }) => {
     return <LoadingSpinner />;
   }
 
-  if (!user || user.role !== 'admin') {
+  let effectiveUser = user;
+  if (!effectiveUser) {
+    try {
+      const storedUser = localStorage.getItem('user');
+      effectiveUser = storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      effectiveUser = null;
+    }
+  }
+
+  if (!effectiveUser || effectiveUser.role !== 'admin') {
     return <Navigate to="/" replace />;
   }
 
