@@ -18,6 +18,14 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const requireEnv = (key) => {
+  const value = process.env[key]?.trim();
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+  return value;
+};
+
 const configuredOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(',').map((origin) => origin.trim()).filter(Boolean)
   : [];
@@ -79,6 +87,17 @@ app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 5000;
+
+try {
+  const mongoUri = process.env.MONGODB_URI?.trim() || process.env.MONGO_URI?.trim();
+  if (!mongoUri) {
+    throw new Error('Missing required environment variable: MONGODB_URI (or MONGO_URI)');
+  }
+  requireEnv('JWT_SECRET');
+} catch (error) {
+  console.error(error.message);
+  process.exit(1);
+}
 
 connectDB().then(() => {
   app.listen(PORT, () => {
