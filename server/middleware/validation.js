@@ -87,17 +87,15 @@ export const serviceValidation = [
   body('description')
     .trim()
     .notEmpty()
-    .withMessage('Service description is required')
-    .isLength({ min: 10 })
-    .withMessage('Service description must be at least 10 characters'),
+    .withMessage('Service description is required'),
   body('icon')
+    .optional({ checkFalsy: true })
     .trim()
-    .notEmpty()
-    .withMessage('Service icon is required'),
+    .isLength({ max: 50 })
+    .withMessage('Service icon cannot exceed 50 characters'),
   body('division')
+    .optional({ checkFalsy: true })
     .trim()
-    .notEmpty()
-    .withMessage('Division is required')
     .isIn(['Furniture', 'Home Essentials', 'Business'])
     .withMessage('Division must be Furniture, Home Essentials, or Business'),
 ];

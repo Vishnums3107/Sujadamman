@@ -80,7 +80,8 @@ const AdminServices = () => {
       fetchServices();
     } catch (error) {
       console.error('Error saving service:', error);
-      toast.error(error.response?.data?.message || 'Failed to save service');
+      const fieldError = error.response?.data?.errors?.[0]?.message;
+      toast.error(fieldError || error.response?.data?.message || 'Failed to save service');
       setLoading(false);
     }
   };

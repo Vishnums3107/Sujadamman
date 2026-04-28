@@ -215,7 +215,11 @@ export const getService = asyncHandler(async (req, res) => {
 // @route   POST /api/services
 // @access  Private/Admin
 export const createService = asyncHandler(async (req, res) => {
-  const { title, description, icon, division, image } = req.body;
+  const title = req.body.title?.trim();
+  const description = req.body.description?.trim();
+  const icon = req.body.icon?.trim() || 'FaBoxes';
+  const division = req.body.division?.trim() || 'Furniture';
+  const image = typeof req.body.image === 'string' ? req.body.image.trim() : '';
 
   const service = await Service.create({
     title,
@@ -242,12 +246,20 @@ export const updateService = asyncHandler(async (req, res) => {
     throw new Error('Service not found');
   }
 
-  service.title = req.body.title || service.title;
-  service.description = req.body.description || service.description;
-  service.icon = req.body.icon || service.icon;
-  service.division = req.body.division || service.division;
+  if (req.body.title !== undefined) {
+    service.title = req.body.title?.trim() || service.title;
+  }
+  if (req.body.description !== undefined) {
+    service.description = req.body.description?.trim() || service.description;
+  }
+  if (req.body.icon !== undefined) {
+    service.icon = req.body.icon?.trim() || service.icon;
+  }
+  if (req.body.division !== undefined) {
+    service.division = req.body.division?.trim() || service.division;
+  }
   if (req.body.image !== undefined) {
-    service.image = req.body.image;
+    service.image = typeof req.body.image === 'string' ? req.body.image.trim() : service.image;
   }
 
   const updatedService = await service.save();
