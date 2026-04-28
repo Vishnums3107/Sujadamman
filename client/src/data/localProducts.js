@@ -7,7 +7,10 @@ export const LOCAL_PRODUCTS = [
     stock: 28,
     featured: true,
     category: { name: 'Home Essentials', type: 'Water Bottles' },
-    images: ['products/hammered-steel-water-bottle-set.png'],
+    images: [
+      'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=1200&q=80',
+    ],
     isLocalCatalog: true,
   },
   {
@@ -17,7 +20,10 @@ export const LOCAL_PRODUCTS = [
     price: 1199,
     stock: 34,
     category: { name: 'Home Essentials', type: 'Flasks' },
-    images: ['products/pastel-vacuum-flask-set.png'],
+    images: [
+      'https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=1200&q=80',
+    ],
     isLocalCatalog: true,
   },
   {
@@ -27,7 +33,10 @@ export const LOCAL_PRODUCTS = [
     price: 699,
     stock: 41,
     category: { name: 'Home Essentials', type: 'Lunch Box' },
-    images: ['products/classic-lunch-box.png'],
+    images: [
+      'https://images.unsplash.com/photo-1562095241-8c6714fd4178?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=1200&q=80',
+    ],
     isLocalCatalog: true,
   },
   {
@@ -37,7 +46,10 @@ export const LOCAL_PRODUCTS = [
     price: 499,
     stock: 50,
     category: { name: 'Home Essentials', type: 'Kids Bottles' },
-    images: ['products/kids-mini-bottle-pair.png'],
+    images: [
+      'https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=1200&q=80',
+    ],
     isLocalCatalog: true,
   },
   {
@@ -47,7 +59,10 @@ export const LOCAL_PRODUCTS = [
     price: 399,
     stock: 46,
     category: { name: 'Home Essentials', type: 'Mugs' },
-    images: ['products/designer-ceramic-mug-set.png'],
+    images: [
+      'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80',
+    ],
     isLocalCatalog: true,
   },
   {
@@ -57,7 +72,10 @@ export const LOCAL_PRODUCTS = [
     price: 949,
     stock: 22,
     category: { name: 'Home Essentials', type: 'Casserole' },
-    images: ['products/wooden-finish-casserole-small.png'],
+    images: [
+      'https://images.unsplash.com/photo-1584990347449-a63f6f25d959?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=1200&q=80',
+    ],
     isLocalCatalog: true,
   },
   {
@@ -68,7 +86,10 @@ export const LOCAL_PRODUCTS = [
     stock: 24,
     featured: true,
     category: { name: 'Home Essentials', type: 'Casserole' },
-    images: ['products/marbella-casserole.png'],
+    images: [
+      'https://images.unsplash.com/photo-1592415486689-125cbbfcbee2?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1584990347449-a63f6f25d959?auto=format&fit=crop&w=1200&q=80',
+    ],
     isLocalCatalog: true,
   },
   {
@@ -78,7 +99,10 @@ export const LOCAL_PRODUCTS = [
     price: 1399,
     stock: 20,
     category: { name: 'Home Essentials', type: 'Casserole' },
-    images: ['products/morija-casserole.png'],
+    images: [
+      'https://images.unsplash.com/photo-1584990347449-a63f6f25d959?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1592415486689-125cbbfcbee2?auto=format&fit=crop&w=1200&q=80',
+    ],
     isLocalCatalog: true,
   },
   {
@@ -88,7 +112,10 @@ export const LOCAL_PRODUCTS = [
     price: 1549,
     stock: 18,
     category: { name: 'Home Essentials', type: 'Casserole' },
-    images: ['products/latina-casserole.png'],
+    images: [
+      'https://images.unsplash.com/photo-1592415486689-125cbbfcbee2?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=1200&q=80',
+    ],
     isLocalCatalog: true,
   },
   {
@@ -98,7 +125,10 @@ export const LOCAL_PRODUCTS = [
     price: 1099,
     stock: 26,
     category: { name: 'Home Essentials', type: 'Casserole' },
-    images: ['products/wooden-finish-casserole-medium.png'],
+    images: [
+      'https://images.unsplash.com/photo-1584990347449-a63f6f25d959?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=1200&q=80',
+    ],
     isLocalCatalog: true,
   },
 ];
