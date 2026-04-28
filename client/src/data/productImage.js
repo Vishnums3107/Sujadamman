@@ -68,8 +68,12 @@ export const getProductNameFallbackImage = (productName, categoryName, variant =
 export const getProductImage = (product, index = 0) => {
   const imageUrl = product?.images?.[index];
   if (imageUrl) {
-    if (typeof imageUrl === 'string' && imageUrl.startsWith('/')) {
-      return getAssetPath(imageUrl);
+    if (typeof imageUrl === 'string') {
+      const normalizedImageUrl = imageUrl.trim();
+      if (/^(https?:)?\/\//i.test(normalizedImageUrl) || normalizedImageUrl.startsWith('data:')) {
+        return normalizedImageUrl;
+      }
+      return getAssetPath(normalizedImageUrl);
     }
     return imageUrl;
   }

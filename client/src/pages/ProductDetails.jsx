@@ -56,7 +56,7 @@ const ProductDetails = () => {
   const buildInquiryMessage = () => {
     if (!product) return '';
 
-    const productUrl = `${window.location.origin}/products/${product._id || id}`;
+    const productUrl = `${window.location.origin}${window.location.pathname}#/products/${product._id || id}`;
     const availability = product.stock > 0 ? `${product.stock} in stock` : 'Out of stock';
 
     return [
