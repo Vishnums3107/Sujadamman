@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { categoryService, productService } from '../services';
+import { categoryService, productService, serviceService } from '../services';
 import ProductGrid from '../components/product/ProductGrid';
 import ProductSkeleton from '../components/ProductSkeleton';
+import ServiceCard from '../components/service/ServiceCard';
 
 const Home = () => {
   const [sampleProducts, setSampleProducts] = useState([]);
   const [samplesLoading, setSamplesLoading] = useState(true);
+  const [services, setServices] = useState([]);
+  const [servicesLoading, setServicesLoading] = useState(true);
 
   useEffect(() => {
     const fetchSampleProducts = async () => {
@@ -46,6 +49,23 @@ const Home = () => {
     };
 
     fetchSampleProducts();
+  }, []);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      setServicesLoading(true);
+      try {
+        const res = await serviceService.getServices();
+        setServices(res?.data || []);
+      } catch (error) {
+        console.error('Error fetching home services:', error);
+        setServices([]);
+      } finally {
+        setServicesLoading(false);
+      }
+    };
+
+    fetchServices();
   }, []);
 
   return (
@@ -121,6 +141,44 @@ const Home = () => {
 
           <div className="text-center mt-12">
             <Link to="/products" className="btn-primary">See All Products</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="section-title">Our Services</h2>
+          <div className="section-accent" />
+          {servicesLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="h-72 rounded-2xl bg-gray-100 animate-pulse" />
+              ))}
+            </div>
+          ) : services.length ? (
+            <div className="mt-10 -mx-1">
+              <div className="flex gap-5 overflow-x-auto pb-3 px-1 snap-x snap-mandatory">
+                {services.map((service) => (
+                  <div
+                    key={service._id}
+                    className="min-w-[280px] sm:min-w-[340px] lg:min-w-[360px] snap-start flex-shrink-0"
+                  >
+                    <ServiceCard
+                      icon={service.icon}
+                      title={service.title}
+                      description={service.description}
+                      details={service.description}
+                      image={service.image}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="text-center text-gray-600 mt-10">Services are not available right now.</p>
+          )}
+          <div className="text-center mt-10">
+            <Link to="/services" className="btn-primary">View All Services</Link>
           </div>
         </div>
       </section>

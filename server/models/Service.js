@@ -20,6 +20,12 @@ const serviceSchema = new mongoose.Schema(
       trim: true,
       maxlength: [50, 'Service icon cannot exceed 50 characters'],
     },
+    image: {
+      type: String,
+      trim: true,
+      default: '',
+      maxlength: [1000, 'Service image URL cannot exceed 1000 characters'],
+    },
     division: {
       type: String,
       required: [true, 'Please provide a division'],

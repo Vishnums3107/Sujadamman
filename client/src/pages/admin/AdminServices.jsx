@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FaEdit, FaPlus, FaTimes, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaImage, FaPlus, FaTimes, FaTrash } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import AdminShell from '../../components/admin/AdminShell';
 import { serviceService } from '../../services';
 
-const emptyForm = { title: '', description: '', icon: 'FaBoxes', division: 'Furniture' };
+const emptyForm = { title: '', description: '', icon: 'FaBoxes', division: 'Furniture', image: '' };
 
 const AdminServices = () => {
   const [services, setServices] = useState([]);
@@ -12,6 +12,7 @@ const AdminServices = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingService, setEditingService] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
+  const [imageFile, setImageFile] = useState(null);
 
   const fetchServices = async () => {
     try {
@@ -32,11 +33,18 @@ const AdminServices = () => {
   const openModal = (service = null) => {
     if (service) {
       setEditingService(service);
-      setFormData({ title: service.title, description: service.description, icon: service.icon, division: service.division });
+      setFormData({
+        title: service.title,
+        description: service.description,
+        icon: service.icon,
+        division: service.division,
+        image: service.image || '',
+      });
     } else {
       setEditingService(null);
       setFormData(emptyForm);
     }
+    setImageFile(null);
     setShowModal(true);
   };
 
@@ -44,6 +52,7 @@ const AdminServices = () => {
     setShowModal(false);
     setEditingService(null);
     setFormData(emptyForm);
+    setImageFile(null);
   };
 
   const submit = async (event) => {
@@ -51,14 +60,22 @@ const AdminServices = () => {
     setLoading(true);
 
     try {
+      let savedService;
       if (editingService) {
-        await serviceService.updateService(editingService._id, formData);
-        toast.success('Service updated');
+        const updateRes = await serviceService.updateService(editingService._id, formData);
+        savedService = updateRes.data;
       } else {
-        await serviceService.createService(formData);
-        toast.success('Service created');
+        const createRes = await serviceService.createService(formData);
+        savedService = createRes.data;
       }
 
+      if (imageFile && savedService?._id) {
+        const payload = new FormData();
+        payload.append('image', imageFile);
+        await serviceService.uploadImage(savedService._id, payload);
+      }
+
+      toast.success(editingService ? 'Service updated' : 'Service created');
       closeModal();
       fetchServices();
     } catch (error) {
@@ -97,6 +114,7 @@ const AdminServices = () => {
           <table className="min-w-full text-sm">
             <thead className="bg-[#F8F8F8]">
               <tr>
+                <th className="text-left px-3 py-3">Image</th>
                 <th className="text-left px-3 py-3">Title</th>
                 <th className="text-left px-3 py-3">Division</th>
                 <th className="text-left px-3 py-3">Icon</th>
@@ -107,6 +125,17 @@ const AdminServices = () => {
             <tbody>
               {services.map((service) => (
                 <tr key={service._id} className="border-t border-black/10">
+                  <td className="px-3 py-3">
+                    {service.image ? (
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="w-14 h-10 rounded-md object-cover border border-black/10"
+                      />
+                    ) : (
+                      <span className="text-xs text-gray-400">No image</span>
+                    )}
+                  </td>
                   <td className="px-3 py-3 font-semibold">{service.title}</td>
                   <td className="px-3 py-3">{service.division}</td>
                   <td className="px-3 py-3">{service.icon}</td>
@@ -146,6 +175,26 @@ const AdminServices = () => {
                   <option value="Business">Business</option>
                 </select>
                 <input className="input-field" placeholder="Icon (e.g., FaCouch)" value={formData.icon} onChange={(e) => setFormData((prev) => ({ ...prev, icon: e.target.value }))} required />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium block mb-2">
+                  <FaImage className="inline mr-2" />
+                  Service image
+                </label>
+                <input
+                  className="input-field"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                />
+                {formData.image ? (
+                  <img
+                    src={formData.image}
+                    alt={formData.title || 'Service image preview'}
+                    className="mt-3 w-40 h-24 rounded-lg object-cover border border-black/10"
+                  />
+                ) : null}
               </div>
 
               <div className="grid grid-cols-2 gap-3 pt-2">

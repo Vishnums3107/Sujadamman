@@ -168,6 +168,15 @@ export const serviceService = {
     return response.data;
   },
 
+  uploadImage: async (id, formData) => {
+    const response = await api.post(`/api/services/${id}/image`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
   deleteService: async (id) => {
     const response = await api.delete(`/api/services/${id}`);
     return response.data;
