@@ -7,6 +7,8 @@ import { productService } from '../services';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Container from '../components/ui/Container';
 import OptimizedImage from '../components/ui/OptimizedImage';
+import { getPrimaryWhatsAppNumber } from '../data/companyProfiles';
+import { getProductImage } from '../data/productImage';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -40,16 +42,39 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id, navigate]);
 
+  const buildInquiryMessage = () => {
+    if (!product) return '';
+
+    const productUrl = `${window.location.origin}/products/${product._id || id}`;
+    const availability = product.stock > 0 ? `${product.stock} in stock` : 'Out of stock';
+
+    return [
+      'Hi, I am interested in this product.',
+      '',
+      `Product: ${product.name}`,
+      `Price: Rs. ${product.price.toLocaleString()}`,
+      `Availability: ${availability}`,
+      `Link: ${productUrl}`,
+    ].join('\n');
+  };
+
   const inquireWhatsApp = () => {
     if (!product) return;
-    const message = `Hi, I'm interested in ${product.name} (₹${product.price.toLocaleString()}).`;
-    window.open(`https://wa.me/1234567890?text=${encodeURIComponent(message)}`, '_blank');
+    const phoneNumber = getPrimaryWhatsAppNumber();
+    if (!phoneNumber) {
+      toast.error('WhatsApp number is not available right now.');
+      return;
+    }
+
+    const message = buildInquiryMessage();
+
+    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   if (loading) return <LoadingSpinner />;
   if (!product) return null;
 
-  const images = product.images?.length ? product.images : ['https://via.placeholder.com/900'];
+  const images = product.images?.length ? product.images : [getProductImage(product, 0)];
 
   return (
     <div className="bg-[#F8F8F8] min-h-screen py-8">
@@ -125,7 +150,11 @@ const ProductDetails = () => {
             </div>
 
             <div className="mt-6 space-y-3">
-              <Link to="/contact" className="btn-primary w-full justify-center">
+              <Link
+                to="/contact"
+                state={{ prefillMessage: buildInquiryMessage() }}
+                className="btn-primary w-full justify-center"
+              >
                 <FaEnvelope className="mr-2" /> Inquiry
               </Link>
               <button onClick={inquireWhatsApp} className="btn-outline w-full justify-center">
@@ -147,7 +176,7 @@ const ProductDetails = () => {
                   className="w-full bg-white border border-black/10 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
                 >
                   <OptimizedImage
-                    src={item.images?.[0] || 'https://via.placeholder.com/400'}
+                    src={getProductImage(item, 0)}
                     alt={item.name}
                     wrapperClassName="w-full h-44"
                   />

@@ -8,6 +8,7 @@ import Modal from '../components/ui/Modal';
 import Container from '../components/ui/Container';
 import Input from '../components/ui/Input';
 import OptimizedImage from '../components/ui/OptimizedImage';
+import { getProductImage } from '../data/productImage';
 
 const PRICE_TIERS = {
   budget: { label: 'Budget Picks', min: '0', max: '5000' },
@@ -281,7 +282,7 @@ const Products = () => {
         {quickViewProduct ? (
           <div className="space-y-4">
             <OptimizedImage
-              src={quickViewProduct.images?.[0] || 'https://via.placeholder.com/600'}
+              src={getProductImage(quickViewProduct, 0)}
               alt={quickViewProduct.name}
               loading="eager"
               className="w-full h-64 object-cover rounded-xl"

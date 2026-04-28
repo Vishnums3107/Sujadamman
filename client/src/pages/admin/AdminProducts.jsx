@@ -81,7 +81,9 @@ const AdminProducts = () => {
       if (imageFiles.length > 0) {
         const payload = new FormData();
         imageFiles.forEach((file) => payload.append('images', file));
-        await productService.uploadImages(result.data._id, payload);
+        await productService.uploadImages(result.data._id, payload, {
+          replace: editingProduct ? 'true' : 'false',
+        });
       }
 
       toast.success(editingProduct ? 'Product updated' : 'Product created');

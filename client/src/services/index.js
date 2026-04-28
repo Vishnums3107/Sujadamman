@@ -63,8 +63,9 @@ export const productService = {
     return response.data;
   },
 
-  uploadImages: async (id, formData) => {
+  uploadImages: async (id, formData, options = {}) => {
     const response = await api.post(`/api/products/${id}/images`, formData, {
+      params: options,
       headers: {
         'Content-Type': 'multipart/form-data',
       },

@@ -5,13 +5,14 @@ import { FaEye } from 'react-icons/fa';
 import Badge from '../ui/Badge';
 import OptimizedImage from '../ui/OptimizedImage';
 import TiltCard from '../ui/TiltCard';
+import { getProductImage } from '../../data/productImage';
 
 const ProductCard = ({ product, onQuickView }) => {
   const [isHovered, setIsHovered] = useState(false);
   
-  const primaryImage = product.images?.[0] || 'https://via.placeholder.com/400x300?text=No+Image';
+  const primaryImage = getProductImage(product, 0);
   const hasSecondaryImage = Boolean(product.images?.[1]);
-  const secondaryImage = product.images?.[1] || primaryImage;
+  const secondaryImage = getProductImage(product, 1);
 
   return (
     <TiltCard className="group">

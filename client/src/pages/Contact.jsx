@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { FaChevronDown } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
 import { contactService } from '../services';
 import Container from '../components/ui/Container';
+import { companyProfiles, distributionAreas } from '../data/companyProfiles';
 
 const STORE_ADDRESS_QUERY =
   'Subpy Wooden Furnitures, Nethimedu, Salem 636002';
@@ -15,10 +17,19 @@ const MAP_DIRECTIONS_URL =
   `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(STORE_ADDRESS_QUERY)}&travelmode=driving`;
 
 const Contact = () => {
+  const location = useLocation();
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
+
+  useEffect(() => {
+    const prefillMessage = location.state?.prefillMessage;
+    if (!prefillMessage) return;
+
+    setFormData((prev) => ({ ...prev, message: prefillMessage }));
+    setErrors((prev) => ({ ...prev, message: undefined }));
+  }, [location.state]);
 
   const validate = () => {
     const nextErrors = {};
@@ -82,38 +93,6 @@ const Contact = () => {
     {
       question: 'How can I request product customization?',
       answer: 'Share your requirements through this form and our team will respond with available options.',
-    },
-  ];
-
-  const distributionAreas = ['Salem', 'Namakkal', 'Erode', 'Dharmapuri', 'Krishnagiri', 'Hosur'];
-
-  const companyProfiles = [
-    {
-      name: 'Subpy Wooden Furnitures',
-      shortName: 'SWF',
-      image:
-        'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
-      address: '311/210-A, Puthur Ittery Road, A.L.D. Vazhagam, Nethimedu, Salem - 636 002',
-      email: 'subpywooden@gmail.com',
-      contacts: [
-        { person: 'S. Sekar', phone: '98428 11797' },
-        { person: 'S. Balaji', phone: '97876 12354' },
-        { person: 'S. Yuwanraj', phone: '70107 13517' },
-      ],
-      brands: ['Reliance', 'Gala', 'Pexpo', 'Sleepywell', 'Recron', 'Gimi', 'Sahil', 'Montavo', 'Kurl-on'],
-    },
-    {
-      name: 'Sujadamman',
-      shortName: 'SJM',
-      image:
-        'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=1200&q=80',
-      address: '315/210-A, Puttur Ittery Road, A.L.D. Vazhagam, Nethimedu, Salem - 636 002',
-      email: 'sujadamman@gmail.com',
-      contacts: [
-        { person: 'S. Sekar', phone: '98428 11797' },
-        { person: 'S. Balaji', phone: '97876 12354' },
-      ],
-      brands: ['Recron', 'SignoraWare', 'Asian', 'Gala', 'Montavo', 'Beautex', 'Pradeep', 'Sahil'],
     },
   ];
 

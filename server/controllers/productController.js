@@ -1,8 +1,60 @@
 import asyncHandler from 'express-async-handler';
 import Product from '../models/Product.js';
 import cloudinary from '../config/cloudinary.js';
+import fs from 'fs/promises';
+import path from 'path';
+import crypto from 'crypto';
+import { fileURLToPath } from 'url';
 
 const DEFAULT_PRODUCT_IMAGE = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&auto=format&fit=crop';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const LOCAL_UPLOADS_DIR = path.resolve(__dirname, '../uploads/products');
+
+const hasCloudinaryConfig = () =>
+  Boolean(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET);
+
+const ensureLocalUploadsDir = async () => {
+  await fs.mkdir(LOCAL_UPLOADS_DIR, { recursive: true });
+};
+
+const saveLocalImage = async (file, req) => {
+  await ensureLocalUploadsDir();
+  const ext = path.extname(file.originalname || '').toLowerCase() || '.jpg';
+  const fileName = `${Date.now()}-${crypto.randomBytes(6).toString('hex')}${ext}`;
+  const filePath = path.join(LOCAL_UPLOADS_DIR, fileName);
+  await fs.writeFile(filePath, file.buffer);
+  return `${req.protocol}://${req.get('host')}/uploads/products/${fileName}`;
+};
+
+const uploadToCloudinary = (file) =>
+  new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: 'furniture-products',
+          resource_type: 'image',
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result.secure_url);
+        }
+      )
+      .end(file.buffer);
+  });
+
+const removeLocalImage = async (imageUrl) => {
+  if (typeof imageUrl !== 'string' || !imageUrl.includes('/uploads/products/')) return;
+  const fileName = imageUrl.split('/uploads/products/')[1];
+  if (!fileName) return;
+
+  const filePath = path.join(LOCAL_UPLOADS_DIR, fileName);
+  try {
+    await fs.unlink(filePath);
+  } catch {
+    // Ignore missing file errors during cleanup.
+  }
+};
 
 const withResolvedImages = (productDoc) => {
   const product = productDoc.toObject ? productDoc.toObject() : productDoc;
@@ -158,8 +210,12 @@ export const deleteProduct = asyncHandler(async (req, res) => {
     if (product.images && product.images.length > 0) {
       for (const imageUrl of product.images) {
         try {
-          const publicId = imageUrl.split('/').pop().split('.')[0];
-          await cloudinary.uploader.destroy(publicId);
+          if (typeof imageUrl === 'string' && imageUrl.includes('/uploads/products/')) {
+            await removeLocalImage(imageUrl);
+          } else if (hasCloudinaryConfig()) {
+            const publicId = imageUrl.split('/').pop().split('.')[0];
+            await cloudinary.uploader.destroy(`furniture-products/${publicId}`);
+          }
         } catch (error) {
           console.error('Error deleting image from Cloudinary:', error);
         }
@@ -194,26 +250,23 @@ export const uploadProductImages = asyncHandler(async (req, res) => {
     throw new Error('Please upload at least one image');
   }
 
-  const uploadPromises = req.files.map((file) => {
-    return new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream(
-          {
-            folder: 'furniture-products',
-            resource_type: 'image',
-          },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result.secure_url);
-          }
-        )
-        .end(file.buffer);
-    });
-  });
-
   try {
-    const imageUrls = await Promise.all(uploadPromises);
-    product.images = [...product.images, ...imageUrls];
+    const imageUrls = await Promise.all(
+      req.files.map(async (file) => {
+        if (!hasCloudinaryConfig()) {
+          return saveLocalImage(file, req);
+        }
+
+        try {
+          return await uploadToCloudinary(file);
+        } catch {
+          return saveLocalImage(file, req);
+        }
+      })
+    );
+
+    const shouldReplace = req.query?.replace === 'true' || req.body?.replace === 'true';
+    product.images = shouldReplace ? imageUrls : [...product.images, ...imageUrls];
     await product.save();
 
     res.json({
@@ -222,7 +275,7 @@ export const uploadProductImages = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     res.status(500);
-    throw new Error('Error uploading images');
+    throw new Error(error?.message || 'Error uploading images');
   }
 });
 
@@ -249,8 +302,12 @@ export const deleteProductImage = asyncHandler(async (req, res) => {
 
   // Delete from Cloudinary
   try {
-    const publicId = imageUrl.split('/').pop().split('.')[0];
-    await cloudinary.uploader.destroy(`furniture-products/${publicId}`);
+    if (imageUrl.includes('/uploads/products/')) {
+      await removeLocalImage(imageUrl);
+    } else if (hasCloudinaryConfig()) {
+      const publicId = imageUrl.split('/').pop().split('.')[0];
+      await cloudinary.uploader.destroy(`furniture-products/${publicId}`);
+    }
   } catch (error) {
     console.error('Error deleting from Cloudinary:', error);
   }
