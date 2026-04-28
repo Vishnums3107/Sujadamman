@@ -9,6 +9,9 @@ import Container from '../components/ui/Container';
 import Input from '../components/ui/Input';
 import OptimizedImage from '../components/ui/OptimizedImage';
 import { getProductImage } from '../data/productImage';
+import { LOCAL_PRODUCTS } from '../data/localProducts';
+
+const PAGE_SIZE = 18;
 
 const PRICE_TIERS = {
   budget: { label: 'Budget Picks', min: '0', max: '5000' },
@@ -17,17 +20,11 @@ const PRICE_TIERS = {
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [products, setProducts] = useState([]);
+  const [apiProducts, setApiProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState({});
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-
-  const pageNumbers = useMemo(
-    () => Array.from({ length: pagination.pages || 0 }, (_, index) => index + 1),
-    [pagination.pages]
-  );
 
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
@@ -39,43 +36,72 @@ const Products = () => {
   });
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await categoryService.getCategories();
-        setCategories(res.data || []);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const params = {
-          ...(filters.search ? { search: filters.search } : {}),
-          ...(filters.category ? { category: filters.category } : {}),
-          ...(filters.minPrice ? { minPrice: filters.minPrice } : {}),
-          ...(filters.maxPrice ? { maxPrice: filters.maxPrice } : {}),
-          limit: 18,
-          page: filters.page,
-        };
+        const [categoryRes, productRes] = await Promise.all([
+          categoryService.getCategories(),
+          productService.getProducts({ limit: 500, page: 1 }),
+        ]);
 
-        const res = await productService.getProducts(params);
-        setProducts(res.data || []);
-        setPagination(res.pagination || {});
+        setCategories(categoryRes.data || []);
+        setApiProducts(productRes.data || []);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching product data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProducts();
-  }, [filters]);
+    fetchData();
+  }, []);
+
+  const allProducts = useMemo(() => [...LOCAL_PRODUCTS, ...apiProducts], [apiProducts]);
+
+  const filteredProducts = useMemo(() => {
+    const searchTerm = filters.search.trim().toLowerCase();
+    const minPrice = filters.minPrice ? Number(filters.minPrice) : null;
+    const maxPrice = filters.maxPrice ? Number(filters.maxPrice) : null;
+    const selectedCategory = categories.find((category) => category._id === filters.category);
+    const selectedCategoryName = `${selectedCategory?.name || ''}`.trim().toLowerCase();
+
+    return allProducts.filter((product) => {
+      const productName = `${product.name || ''}`.toLowerCase();
+      const productDescription = `${product.description || ''}`.toLowerCase();
+      const productCategoryName = `${product.category?.name || product.category?.type || product.category || ''}`.toLowerCase();
+      const productPrice = Number(product.price) || 0;
+
+      const matchesSearch =
+        !searchTerm ||
+        productName.includes(searchTerm) ||
+        productDescription.includes(searchTerm) ||
+        productCategoryName.includes(searchTerm);
+
+      const matchesMinPrice = minPrice === null || productPrice >= minPrice;
+      const matchesMaxPrice = maxPrice === null || productPrice <= maxPrice;
+
+      const matchesCategory =
+        !filters.category ||
+        product.category?._id === filters.category ||
+        (product.isLocalCatalog && selectedCategoryName && productCategoryName.includes(selectedCategoryName));
+
+      return matchesSearch && matchesMinPrice && matchesMaxPrice && matchesCategory;
+    });
+  }, [allProducts, categories, filters.category, filters.maxPrice, filters.minPrice, filters.search]);
+
+  const totalProducts = filteredProducts.length;
+  const totalPages = Math.max(1, Math.ceil(totalProducts / PAGE_SIZE));
+  const currentPage = Math.min(filters.page, totalPages);
+
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    return filteredProducts.slice(startIndex, startIndex + PAGE_SIZE);
+  }, [currentPage, filteredProducts]);
+
+  const pageNumbers = useMemo(
+    () => Array.from({ length: totalPages }, (_, index) => index + 1),
+    [totalPages]
+  );
 
   const updateParams = (nextFilters) => {
     const params = {};
@@ -159,14 +185,14 @@ const Products = () => {
               onClick={() => updateFilter('priceTier', 'budget')}
               className={`rounded-lg px-3 py-2 text-xs font-semibold border transition ${filters.priceTier === 'budget' ? 'bg-primary-red text-white border-primary-red' : 'bg-white border-black/10 text-black hover:border-primary-red/40'}`}
             >
-              Budget (<span aria-hidden>₹</span>5,000)
+              Budget (Rs. 5,000)
             </button>
             <button
               type="button"
               onClick={() => updateFilter('priceTier', 'premium')}
               className={`rounded-lg px-3 py-2 text-xs font-semibold border transition ${filters.priceTier === 'premium' ? 'bg-primary-red text-white border-primary-red' : 'bg-white border-black/10 text-black hover:border-primary-red/40'}`}
             >
-              Premium (25,000+)
+              Premium (Rs. 25,000+)
             </button>
           </div>
           {filters.priceTier ? (
@@ -227,7 +253,7 @@ const Products = () => {
           <section>
             <div className="bg-white border border-black/10 rounded-xl px-4 py-3 mb-6 shadow-sm">
               <p className="text-sm text-gray-600">
-                {pagination.total ? `Showing ${products.length} of ${pagination.total} products` : 'No products found'}
+                {totalProducts ? `Showing ${paginatedProducts.length} of ${totalProducts} products` : 'No products found'}
               </p>
             </div>
 
@@ -235,15 +261,15 @@ const Products = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[1, 2, 3, 4, 5, 6].map((item) => <ProductSkeleton key={item} />)}
               </div>
-            ) : products.length ? (
+            ) : paginatedProducts.length ? (
               <>
-                <ProductGrid products={products} onQuickView={setQuickViewProduct} />
-                {pagination.pages > 1 && (
+                <ProductGrid products={paginatedProducts} onQuickView={setQuickViewProduct} />
+                {totalPages > 1 && (
                   <div className="mt-10 flex justify-center items-center gap-2">
                     <button
                       className="px-4 py-2 bg-white border border-black/10 rounded-lg text-sm"
-                      disabled={filters.page === 1}
-                      onClick={() => changePage(filters.page - 1)}
+                      disabled={currentPage === 1}
+                      onClick={() => changePage(currentPage - 1)}
                     >
                       Previous
                     </button>
@@ -251,15 +277,15 @@ const Products = () => {
                       <button
                         key={pageNumber}
                         onClick={() => changePage(pageNumber)}
-                        className={`w-10 h-10 rounded-lg text-sm font-semibold border ${filters.page === pageNumber ? 'bg-primary-red text-white border-primary-red' : 'bg-white border-black/10 text-black'}`}
+                        className={`w-10 h-10 rounded-lg text-sm font-semibold border ${currentPage === pageNumber ? 'bg-primary-red text-white border-primary-red' : 'bg-white border-black/10 text-black'}`}
                       >
                         {pageNumber}
                       </button>
                     ))}
                     <button
                       className="px-4 py-2 bg-white border border-black/10 rounded-lg text-sm"
-                      disabled={filters.page === pagination.pages}
-                      onClick={() => changePage(filters.page + 1)}
+                      disabled={currentPage === totalPages}
+                      onClick={() => changePage(currentPage + 1)}
                     >
                       Next
                     </button>
@@ -268,7 +294,7 @@ const Products = () => {
               </>
             ) : (
               <div className="bg-white border border-black/10 rounded-2xl p-14 text-center shadow-sm">
-                <div className="text-6xl">🪑</div>
+                <div className="text-6xl font-black text-gray-200">0</div>
                 <p className="font-bold text-2xl mt-4">No matching products</p>
                 <p className="text-gray-600 mt-2">Try adjusting your filters to explore more products.</p>
                 <button onClick={clearFilters} className="btn-primary mt-6">Reset Filters</button>
@@ -289,7 +315,7 @@ const Products = () => {
             />
             <p className="text-gray-600">{quickViewProduct.description}</p>
             <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold text-primary-red">₹{quickViewProduct.price?.toLocaleString?.()}</span>
+              <span className="text-2xl font-bold text-primary-red">Rs. {quickViewProduct.price?.toLocaleString?.()}</span>
               <Link to={`/products/${quickViewProduct._id}`} className="btn-primary" onClick={() => setQuickViewProduct(null)}>
                 Open Details
               </Link>

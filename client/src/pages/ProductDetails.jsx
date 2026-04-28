@@ -9,6 +9,7 @@ import Container from '../components/ui/Container';
 import OptimizedImage from '../components/ui/OptimizedImage';
 import { getPrimaryWhatsAppNumber } from '../data/companyProfiles';
 import { getProductImage } from '../data/productImage';
+import { getLocalProductById, LOCAL_PRODUCTS } from '../data/localProducts';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -23,6 +24,16 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        const localProduct = getLocalProductById(id);
+        if (localProduct) {
+          setProduct(localProduct);
+          const localRelated = LOCAL_PRODUCTS.filter(
+            (item) => item._id !== id && item.category?.type === localProduct.category?.type
+          );
+          setRelatedProducts(localRelated.slice(0, 8));
+          return;
+        }
+
         const res = await productService.getProduct(id);
         setProduct(res.data);
 
@@ -122,7 +133,7 @@ const ProductDetails = () => {
               </span>
             ) : null}
             <h1 className="text-3xl font-heading font-bold leading-tight">{product.name}</h1>
-            <p className="text-primary-red text-4xl font-black mt-4">₹{product.price.toLocaleString()}</p>
+            <p className="text-primary-red text-4xl font-black mt-4">Rs. {product.price.toLocaleString()}</p>
             <p className="text-sm text-gray-500 mt-2">{product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}</p>
 
             <div className="mt-6 border-b border-black/10 flex gap-2">
@@ -182,7 +193,7 @@ const ProductDetails = () => {
                   />
                   <div className="p-3">
                     <p className="font-semibold line-clamp-1">{item.name}</p>
-                    <p className="text-primary-red font-bold mt-1">₹{item.price.toLocaleString()}</p>
+                    <p className="text-primary-red font-bold mt-1">Rs. {item.price.toLocaleString()}</p>
                   </div>
                 </Link>
               ))}

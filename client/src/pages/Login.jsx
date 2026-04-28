@@ -48,6 +48,13 @@ const Login = () => {
         <div className="card p-8">
           {/* Header */}
           <div className="text-center mb-8">
+            <Link to="/" className="inline-flex items-center justify-center mb-4">
+              <img
+                src="/logo/brand-logo.png"
+                alt="Sujadamman and Subpy logo"
+                className="h-14 w-auto object-contain"
+              />
+            </Link>
             <h2 className="text-3xl font-heading font-bold mb-2">Welcome Back</h2>
             <p className="text-gray-600 dark:text-gray-400">Sign in to your account</p>
           </div>

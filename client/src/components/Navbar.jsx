@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import { 
   FaBars, 
   FaTimes, 
-  FaShoppingBag, 
   FaUser, 
   FaSignOutAlt, 
   FaUserShield 
@@ -36,9 +35,11 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-18 py-3">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="p-2 bg-black rounded-xl group-hover:bg-primary-red transition-colors duration-300">
-              <FaShoppingBag className="text-white text-xl" />
-            </div>
+            <img
+              src="/logo/brand-logo.png"
+              alt="Sujadamman and Subpy logo"
+              className="h-12 w-auto object-contain"
+            />
             <span className="font-heading font-bold text-2xl text-black tracking-wide">
               Sujadamman and Subpy 
             </span>

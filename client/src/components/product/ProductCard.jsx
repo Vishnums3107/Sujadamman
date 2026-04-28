@@ -9,15 +9,15 @@ import { getProductImage } from '../../data/productImage';
 
 const ProductCard = ({ product, onQuickView }) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   const primaryImage = getProductImage(product, 0);
   const hasSecondaryImage = Boolean(product.images?.[1]);
   const secondaryImage = getProductImage(product, 1);
 
   return (
     <TiltCard className="group">
-      <motion.div 
-        whileHover={{ y: -8 }} 
+      <motion.div
+        whileHover={{ y: -8 }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className="relative bg-[#121212] rounded-2xl border border-white/10 shadow-[0_20px_45px_-24px_rgba(0,0,0,0.85)] hover:shadow-[0_28px_55px_-24px_rgba(0,0,0,0.95)] transition-all duration-300 overflow-hidden"
@@ -26,7 +26,7 @@ const ProductCard = ({ product, onQuickView }) => {
 
         <div className="relative h-56 bg-gray-900 overflow-hidden">
           <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-40 h-14 rounded-full bg-black/60 blur-xl" />
-          
+
           <div className="absolute inset-0">
             <OptimizedImage
               src={primaryImage}
@@ -69,7 +69,7 @@ const ProductCard = ({ product, onQuickView }) => {
           <h3 className="font-bold text-lg line-clamp-1 mb-1">{product.name}</h3>
           <p className="text-sm text-gray-300 line-clamp-2 mb-3">{product.description}</p>
           <div className="flex items-center justify-between">
-            <p className="text-2xl font-black text-primary-red">₹{product.price?.toLocaleString?.() || product.price}</p>
+            <p className="text-2xl font-black text-primary-red">Rs. {product.price?.toLocaleString?.() || product.price}</p>
             {product.stock > 0 ? <Badge tone="success">In Stock</Badge> : <Badge tone="danger">Out</Badge>}
           </div>
           <Link to={`/products/${product._id}`} className="mt-4 btn-primary w-full text-center opacity-90 group-hover:opacity-100 transition-opacity block">

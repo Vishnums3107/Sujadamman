@@ -77,6 +77,43 @@ const About = () => {
 
       <section className="py-16">
         <Container>
+          <SectionTitle title="Our Founders" subtitle="The visionaries behind Sujadamman and Subpy." />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+            {[
+              { name: 'S. Sekar', role: 'Founder & Managing Director', image: '/founders/sekar.png' },
+              { name: 'S. Balaji', role: 'Co-Founder & Director', image: '/founders/balaji.png' },
+              { name: 'S. Yuwanraj', role: 'Co-Founder & Director', image: '/founders/yuwanraj.png' },
+            ].map((founder, index) => (
+              <motion.div
+                key={founder.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.3 }}
+                className="bg-white rounded-2xl overflow-hidden border border-black/10 shadow-sm text-center group"
+              >
+                <div className="h-72 w-full overflow-hidden bg-gray-100">
+                  <img
+                    src={founder.image}
+                    alt={founder.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={(e) => {
+                      e.target.src = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop'; // fallback
+                    }}
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold font-heading">{founder.name}</h3>
+                  <p className="text-gray-500 text-sm mt-1">{founder.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      <section className="py-16">
+        <Container>
           <SectionTitle title="Timeline" subtitle="Key milestones in our growth." />
           <div className="max-w-3xl mx-auto mt-10 space-y-4">
             {['2008 - Foundation', '2013 - Regional Expansion', '2018 - Manufacturing Scale Up', '2024 - Integrated Furniture & Essentials'].map((item, index) => (

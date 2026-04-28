@@ -264,16 +264,18 @@ npm run build
 - Start Command: `cd server && npm start`
 - Root Directory: `/`
 
-### Frontend Deployment (Vercel/Netlify)
+### Frontend Deployment (GitHub Pages)
 
-1. **Create account** on Vercel or Netlify
-2. **Connect repository**
-3. **Configure build settings**:
-   - Build Command: `cd client && npm run build`
-   - Output Directory: `client/dist`
-4. **Add environment variables**:
-   - `VITE_API_URL=your_backend_url`
-5. **Deploy**
+This repo includes `.github/workflows/deploy-gh-pages.yml` to auto-deploy the frontend from `client/` whenever `main` is updated.
+
+1. Push to `main`
+2. In GitHub repo settings, open **Pages**
+3. Set Source to **GitHub Actions**
+4. Wait for the **Deploy Frontend To GitHub Pages** workflow to complete
+5. Open the live URL:
+   - `https://vishnums3107.github.io/Sujadamman/`
+
+Note: GitHub Pages hosts only the React frontend. The Node/Express API must be deployed separately (Render/Railway).
 
 ### MongoDB Atlas Setup
 
@@ -281,7 +283,9 @@ npm run build
 2. Create database user
 3. Whitelist IP (0.0.0.0/0 for all IPs)
 4. Get connection string
-5. Add to backend environment variables
+5. Add to backend environment variables:
+   - `MONGODB_URI=your_atlas_connection_string`
+   - `CLIENT_URL=http://localhost:5173,https://vishnums3107.github.io`
 
 ### Cloudinary Setup
 

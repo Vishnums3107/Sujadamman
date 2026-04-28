@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { FaShoppingBag } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 
 const Footer = () => {
@@ -12,9 +11,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-primary-red rounded-lg">
-                <FaShoppingBag className="text-white" />
-              </div>
+              <img
+                src="/logo/brand-logo.png"
+                alt="Sujadamman and Subpy logo"
+                className="h-12 w-auto object-contain"
+              />
               <h3 className="text-xl font-heading font-bold text-white">Sujadamman and Subpy </h3>
             </div>
             <p className="text-sm leading-relaxed text-gray-400 max-w-sm">

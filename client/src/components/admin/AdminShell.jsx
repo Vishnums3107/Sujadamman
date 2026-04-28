@@ -23,9 +23,16 @@ const AdminShell = ({ title, subtitle, children, actions }) => {
     <div className="min-h-screen bg-[#F8F8F8]">
       <header className="bg-[#111111] text-white">
         <div className="w-full px-4 sm:px-6 lg:px-8 py-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo/brand-logo.png"
+              alt="Sujadamman and Subpy logo"
+              className="h-12 w-auto object-contain"
+            />
+            <div>
             <h1 className="text-xl md:text-2xl font-heading font-bold">{title}</h1>
             {subtitle ? <p className="text-sm text-gray-300 mt-1">{subtitle}</p> : null}
+            </div>
           </div>
           <div className="flex items-center gap-3">
             {actions ? <div>{actions}</div> : null}
